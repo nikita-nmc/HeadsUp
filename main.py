@@ -10,14 +10,17 @@ TOKEN = 'ODUzMDk4MTc1MDQzNjAwNDA0.YMQblg.e2dd7DP28hs-I8HH3oy7dZeWORA'
 
 
 def get_code(city):
+    listOfAirports = []
     with open('airports.csv', newline='', encoding='UTF8') as airports:
         reader = csv.reader(airports, delimiter=',')
         for row in reader:
             if row[10] == city and row[2] == 'large_airport':
-                return (row[13])
+                listOfAirports.append([row[13], ' ', row[3]])
+    return listOfAirports
 
 
 def print_full_flights(response, botResponse, userResponse):
+
     for i in botResponse:
         if i[0] == userResponse:
             flight = i
@@ -89,7 +92,9 @@ async def flightHelp(ctx):
             '\n$flight Airline <Origin City E.G. Auckland> <Destination City E.G. Sydney> \n' +
             '\n$flightAbout\n'
             '\nIf the airline name has several words, type it within speech marks E.G. "Air New Zealand" \n' +
-            'To respond to the bot with an option selection, simply type the singular number E.G. 1' + "```"]
+            'To respond to the bot with an option selection, simply type the singular number E.G. 1 \n' +
+            '\nKnown Issues: ' +
+            '\n-The API returns some airlines in lowercase letters, some user searches may not be recognized as a result E.G. Jetstar is only recognised as jetstar']
     await ctx.send(text[0])
 
 @bot.command()
@@ -112,9 +117,31 @@ async def flight(ctx, *args):
         if len(args[1]) > 3:
             if not args[0][0].isupper():
                 query['airline_name'] = args[0]
-            query['dep_iata'] = get_code(args[1].capitalize())
-            query['arr_iata'] = get_code(args[2].capitalize())
-
+            depAirportList = get_code(args[1].capitalize())
+            arrAirportList = get_code(args[2].capitalize())
+            if len(depAirportList) != 1:
+                await ctx.send("Please select the departure airport: ")
+                toPrint = ['```']
+                for i in range(len(depAirportList)):
+                    toPrint = toPrint + [str(i+1)] + [". "] + depAirportList[i] + ["\n"]
+                toPrint += ['```']
+                await ctx.send("".join(toPrint))
+                userResponse = await bot.wait_for('message')
+                query['dep_iata'] = depAirportList[int(userResponse.content)-1][0]
+            else:
+                query['dep_iata'] = get_code(args[1].capitalize())[0][0]
+            if len(arrAirportList) != 1:
+                await ctx.send("Please select the arrival airport: ")
+                toPrint = ['```']
+                for i in range(len(arrAirportList)):
+                    toPrint = toPrint + [str(i + 1)] + [". "] + arrAirportList[i] + ["\n"]
+                toPrint += ['```']
+                await ctx.send("".join(toPrint))
+                userResponse = await bot.wait_for('message')
+                query['arr_iata'] = depAirportList[int(userResponse.content) - 1][0]
+            else:
+                query['arr_iata'] = get_code(args[2].capitalize())[0][0]
+    print(query)
     response = requests.get(url + "flights", params=query)
     flight_numbers = []
     botResponse = []
@@ -130,13 +157,15 @@ async def flight(ctx, *args):
         newFlight = [str(flight_numbers.index(flightNo) + 1) + '. ' + flightNo + ' ' + depTime + '\n']
         botResponse = botResponse + newFlight
     numberOfFlights = len(flight_numbers)
-    if numberOfFlights == 1:
-        botResponse = ['```' + 'There are ' + str(
-            numberOfFlights) + ' flights with your parameters today: ' + '\n'] + botResponse + [
-                        "Respond with the number of a flight for more information. E.g. 1 ```"]
-    else:
+    if numberOfFlights == 0:
+        botResponse = ['```' + 'There are no flights with your parameters today.' + '```']
+    elif numberOfFlights == 1:
         botResponse = ['```' + 'There is ' + str(
             numberOfFlights) + ' flight with your parameters today: ' + '\n'] + botResponse + [
+                        "Respond with the number of a flight for more information. E.g. 1 ```"]
+    else:
+        botResponse = ['```' + 'There are ' + str(
+            numberOfFlights) + ' flights with your parameters today: ' + '\n'] + botResponse + [
                         "Respond with the number of the flight for more information. E.g. 1 ```"]
     unjoinedBotResponse = botResponse
     botResponse = "".join(botResponse)
