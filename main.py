@@ -165,11 +165,11 @@ async def flight(ctx, *args):
     elif numberOfFlights == 1:
         botResponse = ['```' + 'There is ' + str(
             numberOfFlights) + ' flight with your parameters today: ' + '\n'] + botResponse + [
-                        "Respond with the number of a flight for more information. E.g. 1 ```"]
+                        "Select it for more information.  ```"]
     else:
         botResponse = ['```' + 'There are ' + str(
             numberOfFlights) + ' flights with your parameters today: ' + '\n'] + botResponse + [
-                        "Respond with the number of the flight for more information. E.g. 1 ```"]
+                        "Select one for more information. ```"]
     unjoinedBotResponse = botResponse
     botResponse = "".join(botResponse)
     await ctx.send(botResponse)
