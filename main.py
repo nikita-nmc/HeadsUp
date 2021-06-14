@@ -94,12 +94,12 @@ async def flightHelp(ctx):
             '\nIf the airline name has several words, type it within speech marks E.G. "Air New Zealand" \n' +
             'To respond to the bot with an option selection, simply type the singular number E.G. 1 \n' +
             '\nKnown Issues: ' +
-            '\n-The API returns some airlines in lowercase letters, some user searches may not be recognized as a result E.G. Jetstar is only recognised as jetstar']
+            '\n-The API returns some airlines in lowercase letters, some user searches may not be recognized as a result E.G. Jetstar is only recognised as jetstar```']
     await ctx.send(text[0])
 
 @bot.command()
 async def flightAbout(ctx):
-    text = ["```" + 'Heads Up V0.1 2021\n' +
+    text = ["```" + 'Heads Up V0.1.1 2021\n' +
             '\nWritten By Nikita Roumiantsev in Auckland, New Zealand\n' +
             '\nPowered by Aviation Stack \n' + "```"]
     await ctx.send(text[0])
