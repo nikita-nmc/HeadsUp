@@ -79,6 +79,9 @@ async def on_ready():
 async def ping(ctx):
     await ctx.send('Pong!')
 
+@bot.command()
+async def ooga(ctx):
+    await ctx.send('Booga')
 
 @bot.command()
 async def hello(ctx):
@@ -138,7 +141,7 @@ async def flight(ctx, *args):
                 toPrint += ['```']
                 await ctx.send("".join(toPrint))
                 userResponse = await bot.wait_for('message')
-                query['arr_iata'] = depAirportList[int(userResponse.content) - 1][0]
+                query['arr_iata'] = arrAirportList[int(userResponse.content) - 1][0]
             else:
                 query['arr_iata'] = get_code(args[2].capitalize())[0][0]
     print(query)
