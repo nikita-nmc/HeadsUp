@@ -1,11 +1,8 @@
 import discord
 import requests
-import time
 import random
 import csv
 from discord.ext import commands
-
-# response = [{'flight_date': '2021-06-12', 'flight_status': 'landed', 'departure': {'airport': 'Auckland International', 'timezone': 'Pacific/Auckland', 'iata': 'AKL', 'icao': 'NZAA', 'terminal': 'I', 'gate': '9', 'delay': 10, 'scheduled': '2021-06-12T08:55:00+00:00', 'estimated': '2021-06-12T08:55:00+00:00', 'actual': '2021-06-12T09:04:00+00:00', 'estimated_runway': '2021-06-12T09:04:00+00:00', 'actual_runway': '2021-06-12T09:04:00+00:00'}, 'arrival': {'airport': 'Tullamarine', 'timezone': 'Australia/Melbourne', 'iata': 'MEL', 'icao': 'YMML', 'terminal': '2', 'gate': '5', 'baggage': None, 'delay': None, 'scheduled': '2021-06-12T10:45:00+00:00', 'estimated': '2021-06-12T10:45:00+00:00', 'actual': '2021-06-12T10:33:00+00:00', 'estimated_runway': '2021-06-12T10:33:00+00:00', 'actual_runway': '2021-06-12T10:33:00+00:00'}, 'airline': {'name': 'Air New Zealand', 'iata': 'NZ', 'icao': 'ANZ'}, 'flight': {'number': '123', 'iata': 'NZ123', 'icao': 'ANZ123', 'codeshared': None}, 'aircraft': None, 'live': None}, {'flight_date': '2021-06-12', 'flight_status': 'cancelled', 'departure': {'airport': 'Auckland International', 'timezone': 'Pacific/Auckland', 'iata': 'AKL', 'icao': 'NZAA', 'terminal': 'I', 'gate': '1', 'delay': None, 'scheduled': '2021-06-12T18:30:00+00:00', 'estimated': '2021-06-12T18:30:00+00:00', 'actual': None, 'estimated_runway': None, 'actual_runway': None}, 'arrival': {'airport': 'Tullamarine', 'timezone': 'Australia/Melbourne', 'iata': 'MEL', 'icao': 'YMML', 'terminal': '2', 'gate': None, 'baggage': None, 'delay': None, 'scheduled': '2021-06-12T20:30:00+00:00', 'estimated': '2021-06-12T20:30:00+00:00', 'actual': None, 'estimated_runway': None, 'actual_runway': None}, 'airline': {'name': 'Air New Zealand', 'iata': 'NZ', 'icao': 'ANZ'}, 'flight': {'number': '129', 'iata': 'NZ129', 'icao': 'ANZ129', 'codeshared': None}, 'aircraft': None, 'live': None}, {'flight_date': '2021-06-11', 'flight_status': 'landed', 'departure': {'airport': 'Auckland International', 'timezone': 'Pacific/Auckland', 'iata': 'AKL', 'icao': 'NZAA', 'terminal': 'I', 'gate': '4C', 'delay': 34, 'scheduled': '2021-06-11T08:55:00+00:00', 'estimated': '2021-06-11T08:55:00+00:00', 'actual': '2021-06-11T09:28:00+00:00', 'estimated_runway': '2021-06-11T09:28:00+00:00', 'actual_runway': '2021-06-11T09:28:00+00:00'}, 'arrival': {'airport': 'Tullamarine', 'timezone': 'Australia/Melbourne', 'iata': 'MEL', 'icao': 'YMML', 'terminal': '2', 'gate': '7', 'baggage': None, 'delay': 6, 'scheduled': '2021-06-11T10:45:00+00:00', 'estimated': '2021-06-11T10:45:00+00:00', 'actual': '2021-06-11T10:44:00+00:00', 'estimated_runway': '2021-06-11T10:44:00+00:00', 'actual_runway': '2021-06-11T10:44:00+00:00'}, 'airline': {'name': 'Air New Zealand', 'iata': 'NZ', 'icao': 'ANZ'}, 'flight': {'number': '123', 'iata': 'NZ123', 'icao': 'ANZ123', 'codeshared': None}, 'aircraft': {'registration': 'ZK-NZQ', 'iata': 'B789', 'icao': 'B789', 'icao24': 'C82741'}, 'live': None}, {'flight_date': '2021-06-11', 'flight_status': 'landed', 'departure': {'airport': 'Auckland International', 'timezone': 'Pacific/Auckland', 'iata': 'AKL', 'icao': 'NZAA', 'terminal': 'I', 'gate': '3', 'delay': 15, 'scheduled': '2021-06-11T15:40:00+00:00', 'estimated': '2021-06-11T15:40:00+00:00', 'actual': '2021-06-11T15:54:00+00:00', 'estimated_runway': '2021-06-11T15:54:00+00:00', 'actual_runway': '2021-06-11T15:54:00+00:00'}, 'arrival': {'airport': 'Tullamarine', 'timezone': 'Australia/Melbourne', 'iata': 'MEL', 'icao': 'YMML', 'terminal': '2', 'gate': '3', 'baggage': None, 'delay': None, 'scheduled': '2021-06-11T17:30:00+00:00', 'estimated': '2021-06-11T17:30:00+00:00', 'actual': '2021-06-11T17:29:00+00:00', 'estimated_runway': '2021-06-11T17:29:00+00:00', 'actual_runway': '2021-06-11T17:29:00+00:00'}, 'airline': {'name': 'Air New Zealand', 'iata': 'NZ', 'icao': 'ANZ'}, 'flight': {'number': '125', 'iata': 'NZ125', 'icao': 'ANZ125', 'codeshared': None}, 'aircraft': {'registration': 'ZK-NZK', 'iata': 'B789', 'icao': 'B789', 'icao24': 'C8236E'}, 'live': None}, {'flight_date': '2021-06-11', 'flight_status': 'cancelled', 'departure': {'airport': 'Auckland International', 'timezone': 'Pacific/Auckland', 'iata': 'AKL', 'icao': 'NZAA', 'terminal': 'I', 'gate': '4', 'delay': None, 'scheduled': '2021-06-11T18:30:00+00:00', 'estimated': '2021-06-11T18:30:00+00:00', 'actual': None, 'estimated_runway': None, 'actual_runway': None}, 'arrival': {'airport': 'Tullamarine', 'timezone': 'Australia/Melbourne', 'iata': 'MEL', 'icao': 'YMML', 'terminal': '2', 'gate': '7', 'baggage': None, 'delay': None, 'scheduled': '2021-06-11T20:30:00+00:00', 'estimated': '2021-06-11T20:30:00+00:00', 'actual': None, 'estimated_runway': None, 'actual_runway': None}, 'airline': {'name': 'Air New Zealand', 'iata': 'NZ', 'icao': 'ANZ'}, 'flight': {'number': '129', 'iata': 'NZ129', 'icao': 'ANZ129', 'codeshared': None}, 'aircraft': None, 'live': None}]
 
 bot = commands.Bot(command_prefix='$')
 
@@ -30,8 +27,8 @@ def print_full_flights(response, botResponse, userResponse):
     botResponse = ['```']
     for i in range(len(response.json()['data'])):
         accessVar = response.json()['data'][i]
-        print(accessVar)
         if accessVar['flight']['icao'] == flightNo:
+            airline = accessVar['airline']['name']
             depAirport = accessVar['departure']['airport']
             depTerminal = accessVar['departure']['terminal']
             depGate = accessVar['departure']['gate']
@@ -39,25 +36,35 @@ def print_full_flights(response, botResponse, userResponse):
             arrAirport = accessVar['arrival']['airport']
             arrTerminal = accessVar['arrival']['terminal']
             arrGate = accessVar['arrival']['gate']
+            arrBags = accessVar['arrival']['baggage']
+            make = 'Unknown'
             try:
-                aircraft = accessVar['aircraft']['icao']
+                aircraft = accessVar['aircraft']['icao'][1:]
                 rego = accessVar['aircraft']['registration']
+                if aircraft[0] == 'B':
+                    make = 'Boeing'
+                elif aircraft[0] == 'A':
+                    make = 'Airbus'
             except TypeError:
                 aircraft = 'Unknown'
                 rego = 'N/A'
             status = accessVar['flight_status']
             arrTime = accessVar['arrival']['scheduled'][11:][:5]
 
-            newFlight = ['\n' + flightNo + ' ' + depAirport + ' Terminal: ' + str(depTerminal) + ' Gate: '
-                         + str(depGate) + ' Scheduled Departure: ' + depTime +
-                         ' ' + arrAirport + ' Terminal: ' + str(arrTerminal) + ' Gate: ' + str(arrGate)
-                         + ' Aircraft: ' + aircraft + ' ' + rego + '\n' +
-                         'Status: ' + status + ' ' + arrTime + '\n']
+            newFlight = [
+                "\nAirline: {} \nFlight Number: {} \nStatus: {} \n \nDEPARTURE \nDeparture: {} \nTerminal: {} \nGate: {} \nScheduled Time: {} \n \n".format(
+                    airline, flightNo, status, depAirport, depTerminal, str(depGate), depTime)
+                + "ARRIVAL \nArrival: {} \nTerminal: {} \nGate: {} \nBaggage Carousel: {} \nScheduled Time: {} \n \n".format(
+                    arrAirport, arrTerminal, str(arrGate), str(arrBags), arrTime)
+                + "AIRCRAFT \nMake: {} \nModel: {} \nRegistration: {}".format(make, aircraft, rego)]
+
+            pictureLink = "https://www.jetphotos.com/photo/keyword/" + rego
 
             botResponse = botResponse + newFlight
             botResponse = botResponse + ['```']
             botResponse = "".join(botResponse)
-            return botResponse
+            toReturn = [botResponse, pictureLink]
+            return toReturn
 
 
 @bot.event
@@ -116,7 +123,11 @@ async def flight(ctx, *args):
     await ctx.send(botResponse)
 
     userResponse = await bot.wait_for('message')
-    await ctx.send(print_full_flights(response, unjoinedBotResponse, userResponse.content))
+    detailedFlight = print_full_flights(response, unjoinedBotResponse, userResponse.content)
+    # print(detailedFlight[0])
+    await ctx.send(detailedFlight[0])
+    if detailedFlight[1][-3:] != 'N/A':
+        await ctx.send(detailedFlight[1])
 
 
 bot.run(TOKEN)
