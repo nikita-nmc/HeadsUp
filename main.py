@@ -53,9 +53,9 @@ def print_full_flights(response, botResponse, userResponse):
 
             newFlight = [
                 "\nAirline: {} \nFlight Number: {} \nStatus: {} \n \nDEPARTURE \nDeparture: {} \nTerminal: {} \nGate: {} \nScheduled Time: {} \n \n".format(
-                    airline, flightNo, status, depAirport, depTerminal, str(depGate), depTime)
+                    airline, flightNo, status, depAirport, depTerminal, str(depGate).replace("None", "Unknown"), depTime)
                 + "ARRIVAL \nArrival: {} \nTerminal: {} \nGate: {} \nBaggage Carousel: {} \nScheduled Time: {} \n \n".format(
-                    arrAirport, arrTerminal, str(arrGate), str(arrBags), arrTime)
+                    arrAirport, str(arrTerminal).replace("None", "Unknown"), str(arrGate).replace("None", "Unknown"), str(arrBags).replace("None", "Unknown"), arrTime)
                 + "AIRCRAFT \nMake: {} \nModel: {} \nRegistration: {}".format(make, aircraft, rego)]
 
             pictureLink = "https://www.jetphotos.com/photo/keyword/" + rego
@@ -82,6 +82,22 @@ async def hello(ctx):
     greetings = ["Hello!", "Hi!", "Hey!", "Hiya!", "Heya!"]
     await ctx.send(random.choice(greetings))
 
+@bot.command()
+async def flightHelp(ctx):
+    text = ["```" + 'Welcome to Heads Up! The bot currently supports the following commands: \n' +
+            '\n$flight Airline <IATA ORIGIN AIRPORT CODE E.G. AKL> <IATA DESTINATION AIRPORT CODE E.G. SYD> \n' +
+            '\n$flight Airline <Origin City E.G. Auckland> <Destination City E.G. Sydney> \n' +
+            '\n$flightAbout\n'
+            '\nIf the airline name has several words, type it within speech marks E.G. "Air New Zealand" \n' +
+            'To respond to the bot with an option selection, simply type the singular number E.G. 1' + "```"]
+    await ctx.send(text[0])
+
+@bot.command()
+async def flightAbout(ctx):
+    text = ["```" + 'Heads Up V0.1 2021\n' +
+            '\nWritten By Nikita Roumiantsev in Auckland, New Zealand\n' +
+            '\nPowered by Aviation Stack \n' + "```"]
+    await ctx.send(text[0])
 
 @bot.command()
 async def flight(ctx, *args):
@@ -114,10 +130,14 @@ async def flight(ctx, *args):
         newFlight = [str(flight_numbers.index(flightNo) + 1) + '. ' + flightNo + ' ' + depTime + '\n']
         botResponse = botResponse + newFlight
     numberOfFlights = len(flight_numbers)
-
-    botResponse = ['```' + 'There are ' + str(
-        numberOfFlights) + ' flights with your parameters today: ' + '\n'] + botResponse + [
-                      "Respond with the number of a flight for more information. E.g. 1 ```"]
+    if numberOfFlights == 1:
+        botResponse = ['```' + 'There are ' + str(
+            numberOfFlights) + ' flights with your parameters today: ' + '\n'] + botResponse + [
+                        "Respond with the number of a flight for more information. E.g. 1 ```"]
+    else:
+        botResponse = ['```' + 'There is ' + str(
+            numberOfFlights) + ' flight with your parameters today: ' + '\n'] + botResponse + [
+                        "Respond with the number of the flight for more information. E.g. 1 ```"]
     unjoinedBotResponse = botResponse
     botResponse = "".join(botResponse)
     await ctx.send(botResponse)
