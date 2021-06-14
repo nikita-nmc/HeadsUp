@@ -164,11 +164,11 @@ async def flight(ctx, *args):
         botResponse = ['```' + 'There are no flights with your parameters today.' + '```']
     elif numberOfFlights == 1:
         botResponse = ['```' + 'There is ' + str(
-            numberOfFlights) + ' flight with your parameters today: ' + '\n'] + botResponse + [
+            numberOfFlights) + ' ' + args[0] + " flight from " + query['dep_iata'] + ' to ' + query['arr_iata'] + ' today: ' + '\n'] + botResponse + [
                         "Select it for more information.  ```"]
     else:
         botResponse = ['```' + 'There are ' + str(
-            numberOfFlights) + ' flights with your parameters today: ' + '\n'] + botResponse + [
+            numberOfFlights) + ' ' + args[0] + " flights from " + query['dep_iata'] + ' to ' + query['arr_iata'] + ' today: ' + '\n'] + botResponse + [
                         "Select one for more information. ```"]
     unjoinedBotResponse = botResponse
     botResponse = "".join(botResponse)
