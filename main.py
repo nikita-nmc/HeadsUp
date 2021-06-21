@@ -18,7 +18,6 @@ def get_code(city):
         reader = csv.reader(airports, delimiter=',')
         for row in reader:
             if row[10].lower() == city.lower() and (row[2] == 'large_airport' or row[2] == 'medium_airport'):
-                print(row)
                 listOfAirports.append([row[13], ' ', pycountry.countries.get(alpha_2=row[8]).name, ' ', row[3]])
     return listOfAirports
 
