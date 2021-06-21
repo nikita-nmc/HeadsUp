@@ -1,5 +1,5 @@
 import datetime
-
+import pycountry
 import discord
 import requests
 import random
@@ -17,14 +17,13 @@ def get_code(city):
     with open('airports.csv', newline='', encoding='UTF8') as airports:
         reader = csv.reader(airports, delimiter=',')
         for row in reader:
-            if row[10].lower() == city.lower() and row[2] == 'large_airport':
-                listOfAirports.append([row[13], ' ', row[3]])
+            if row[10].lower() == city.lower() and (row[2] == 'large_airport' or row[2] == 'medium_airport'):
+                print(row)
+                listOfAirports.append([row[13], ' ', pycountry.countries.get(alpha_2=row[8]).name, ' ', row[3]])
     return listOfAirports
 
 
 def get_progress(depTimeZone, arrTimeZone, estDep, estArr, delay):
-    # d =
-
     return
 
 
