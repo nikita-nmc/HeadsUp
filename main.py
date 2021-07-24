@@ -1,3 +1,5 @@
+#TODO: ADD COMMENTS!
+
 import datetime
 import pycountry
 import discord
@@ -9,7 +11,7 @@ from discord.ext import commands
 
 bot = commands.Bot(command_prefix='$')
 
-TOKEN = 'ODUzMDk4MTc1MDQzNjAwNDA0.YMQblg.e2dd7DP28hs-I8HH3oy7dZeWORA'
+TOKEN = 'REDACTED'
 
 
 def get_code(city):
@@ -136,7 +138,7 @@ async def flightAbout(ctx):
 
 @bot.command()
 async def flight(ctx, *args):
-    query = {'access_key': 'c4223304f131787d840025bdc3570a46'}
+    query = {'access_key': 'REDACTED'}
     url = "http://api.aviationstack.com/v1/"
     if len(args) == 1:
         query['flight_iata'] = args[0].upper()
