@@ -104,11 +104,6 @@ async def ping(ctx):
 
 
 @bot.command()
-async def ooga(ctx):
-    await ctx.send('Booga')
-
-
-@bot.command()
 async def hello(ctx):
     greetings = ["Hello!", "Hi!", "Hey!", "Hiya!", "Heya!"]
     await ctx.send(random.choice(greetings))
